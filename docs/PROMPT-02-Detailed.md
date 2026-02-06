@@ -283,7 +283,7 @@ CSRF protection is not needed because authentication uses Bearer tokens and cust
 - nginx uses envsubst templates for dynamic port configuration
 
 ### Environment
-- Two required variables: `JWT_SECRET` (min 32 chars) and `MYSQL_ROOT_PASSWORD`
+- Three required variables: `JWT_SECRET` (min 32 chars), `MYSQL_ROOT_PASSWORD` (Docker initialization), and `DB_PASS` (application database user password)
 - All other variables have sensible defaults
 - Frontend API/Socket URLs are baked in at Docker build time via Vite build args
 

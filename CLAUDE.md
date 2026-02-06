@@ -38,7 +38,8 @@ openssl rand -base64 32  # Use output for JWT_SECRET
 
 **Required variables:**
 - `JWT_SECRET` - Must be at least 32 characters (app won't start without it)
-- `MYSQL_ROOT_PASSWORD` - Database password
+- `MYSQL_ROOT_PASSWORD` - MySQL root password (used by Docker to initialize the database)
+- `DB_PASS` - Password for the `pollica` application database user (used by the backend)
 
 ## Development Commands
 
@@ -224,7 +225,8 @@ All environment variables are configured in a single `.env` file in the project 
 
 **Required (app won't start without these):**
 - `JWT_SECRET` - At least 32 characters, generate with `openssl rand -base64 32`
-- `MYSQL_ROOT_PASSWORD` - Database password
+- `MYSQL_ROOT_PASSWORD` - MySQL root password (Docker initialization only)
+- `DB_PASS` - Application database user password (used by the backend)
 
 **Optional (have sensible defaults):**
 - `BACKEND_PORT` - Backend port for host and container (default: 7012)
@@ -264,11 +266,12 @@ The application includes several security measures:
 - **Role-based access** - Admin and presenter roles with middleware enforcement
 - **Registration restricted** - Public registration creates presenter accounts only
 - **MySQL not exposed** - Database only accessible within Docker network
+- **Dedicated DB user** - Application uses a `pollica` database user (not root) with limited privileges
 
 ## Production Deployment Notes
 
 - Set strong `JWT_SECRET` (required, 32+ characters)
-- Set strong `MYSQL_ROOT_PASSWORD`
+- Set strong `MYSQL_ROOT_PASSWORD` and `DB_PASS` (use different passwords)
 - Update or remove demo user accounts from `database/schema.sql`
 - Configure HTTPS/SSL certificates
 - Update `CORS_ORIGIN` to production domain

@@ -537,13 +537,14 @@ Index: `idx_question_id(question_id)`
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | JWT_SECRET | Yes | -- | JWT signing secret (min 32 chars) |
-| MYSQL_ROOT_PASSWORD | Yes | -- | MySQL root password |
+| MYSQL_ROOT_PASSWORD | Yes | -- | MySQL root password (Docker initialization only) |
+| DB_PASS | Yes | -- | Application database user password (used by the backend) |
 | NODE_ENV | No | production | Node.js environment |
 | FRONTEND_PORT | No | 7011 | Frontend host and container port |
 | BACKEND_PORT | No | 7012 | Backend container port (internal only) |
 | DB_HOST | No | mysql | Database hostname |
 | DB_PORT | No | 3306 | Database port |
-| DB_USER | No | root | Database user |
+| DB_USER | No | pollica | Database user |
 | DB_NAME | No | pollica | Database name |
 | DB_CONNECTION_LIMIT | No | 50 | MySQL connection pool size |
 | JWT_EXPIRES_IN | No | 24h | JWT token expiration |

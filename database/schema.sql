@@ -1,6 +1,7 @@
 -- Database Schema for Pollica
+-- The 'pollica' database user is created automatically by MySQL Docker
+-- via MYSQL_USER and MYSQL_PASSWORD environment variables.
 
-CREATE DATABASE IF NOT EXISTS pollica;
 USE pollica;
 
 -- Users table (presenters only - audience members are anonymous)

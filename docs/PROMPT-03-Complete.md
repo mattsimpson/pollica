@@ -85,7 +85,9 @@ Three-tier containerized stack:
 Create `database/schema.sql`:
 
 ```sql
-CREATE DATABASE IF NOT EXISTS pollica;
+-- The 'pollica' database user is created automatically by MySQL Docker
+-- via MYSQL_USER and MYSQL_PASSWORD environment variables.
+
 USE pollica;
 
 CREATE TABLE users (
@@ -734,6 +736,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
       MYSQL_DATABASE: ${DB_NAME:-pollica}
+      MYSQL_USER: ${DB_USER:-pollica}
+      MYSQL_PASSWORD: ${DB_PASS:?DB_PASS is required}
+    # Port 3306 not exposed externally for security - only accessible within Docker network
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
@@ -757,8 +762,8 @@ services:
       NODE_ENV: ${NODE_ENV:-production}
       DB_HOST: ${DB_HOST:-mysql}
       DB_PORT: ${DB_PORT:-3306}
-      DB_USER: ${DB_USER:-root}
-      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is required}
+      DB_USER: ${DB_USER:-pollica}
+      DB_PASSWORD: ${DB_PASS:?DB_PASS is required}
       DB_NAME: ${DB_NAME:-pollica}
       DB_CONNECTION_LIMIT: ${DB_CONNECTION_LIMIT:-50}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
@@ -948,7 +953,8 @@ Include apple-touch-icon and iOS splash screen links for 6 device sizes.
 ```bash
 # REQUIRED
 JWT_SECRET=                    # Min 32 chars. Generate: openssl rand -base64 32
-MYSQL_ROOT_PASSWORD=           # Strong password for MySQL
+MYSQL_ROOT_PASSWORD=           # MySQL root password (Docker initialization only)
+DB_PASS=                       # Application database user password (used by backend)
 
 # OPTIONAL (defaults shown)
 NODE_ENV=production
@@ -956,7 +962,7 @@ FRONTEND_PORT=7011
 BACKEND_PORT=7012
 DB_HOST=mysql
 DB_PORT=3306
-DB_USER=root
+DB_USER=pollica
 DB_NAME=pollica
 DB_CONNECTION_LIMIT=50
 JWT_EXPIRES_IN=24h
@@ -971,7 +977,7 @@ VITE_SOCKET_URL=http://localhost:7011
 
 After building, verify:
 
-1. **Environment**: `cp .env.example .env`, set JWT_SECRET (32+ chars) and MYSQL_ROOT_PASSWORD
+1. **Environment**: `cp .env.example .env`, set JWT_SECRET (32+ chars), MYSQL_ROOT_PASSWORD, and DB_PASS
 2. **Start**: `docker compose up -d --build`
 3. **Health**: `curl http://localhost:7012/health` returns `{ status: 'OK' }` (from within Docker network) or test via `curl http://localhost:7011/api/../health`
 4. **Frontend**: Navigate to `http://localhost:7011` -- should see login page

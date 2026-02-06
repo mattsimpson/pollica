@@ -90,6 +90,7 @@ openssl rand -base64 32
 # Edit .env and set:
 # - JWT_SECRET (paste the generated value)
 # - MYSQL_ROOT_PASSWORD (choose a secure password)
+# - DB_PASS (choose a different password for the application database user)
 ```
 
 4. Start all services using Docker Compose:
@@ -124,7 +125,7 @@ docker compose logs -f
 cp .env.example .env
 ```
 
-2. Set `JWT_SECRET` and `MYSQL_ROOT_PASSWORD` in `.env`
+2. Set `JWT_SECRET`, `MYSQL_ROOT_PASSWORD`, and `DB_PASS` in `.env`
 
 3. Ensure MySQL is running and accessible with the credentials in `.env`
 
@@ -326,7 +327,8 @@ All variables are configured in a single `.env` file in the project root. See `.
 
 ### Required
 - `JWT_SECRET` - Secret key for JWT tokens (minimum 32 characters, app won't start without it)
-- `MYSQL_ROOT_PASSWORD` - MySQL database password
+- `MYSQL_ROOT_PASSWORD` - MySQL root password (used by Docker to initialize the database)
+- `DB_PASS` - Password for the `pollica` application database user (used by the backend)
 
 ### Server Configuration
 - `NODE_ENV` - Environment mode (default: production)
@@ -336,7 +338,7 @@ All variables are configured in a single `.env` file in the project root. See `.
 ### Database Configuration
 - `DB_HOST` - MySQL host (default: mysql)
 - `DB_PORT` - MySQL port (default: 3306)
-- `DB_USER` - MySQL username (default: root)
+- `DB_USER` - MySQL username (default: pollica)
 - `DB_NAME` - Database name (default: pollica)
 - `DB_CONNECTION_LIMIT` - Connection pool size (default: 50)
 
@@ -414,7 +416,8 @@ docker compose up -d
 
 3. **Database security**:
    - Don't expose MySQL port externally
-   - Use separate database user with limited privileges
+   - Application uses a dedicated `pollica` database user (not root) with limited privileges
+   - Set a strong, unique `DB_PASS` different from `MYSQL_ROOT_PASSWORD`
    - Enable MySQL SSL connections
 
 4. **Additional recommendations**:
