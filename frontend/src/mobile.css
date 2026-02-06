@@ -1,0 +1,160 @@
+/* Mobile and iOS-specific optimizations */
+
+/* Safe area insets for iPhone notch */
+body {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Improve touch targets for mobile */
+@media (max-width: 768px) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    min-height: 44px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    padding: 12px;
+  }
+
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    font-size: 18px;
+    padding: 16px;
+  }
+
+  /* Mobile navigation */
+  .main-content {
+    padding: 1rem;
+  }
+
+  /* Responsive grid */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+  }
+
+  /* Mobile-friendly modal */
+  .modal {
+    width: 95%;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+  }
+
+  /* Touch-friendly question cards */
+  .card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+  }
+
+  /* Improve scrolling on iOS */
+  .response-chart,
+  .main-content {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better mobile table/list views */
+  .session-card {
+    padding: 16px;
+  }
+
+  /* Larger touch targets for badges and small buttons */
+  .badge {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  /* Word cloud mobile optimization */
+  .word-cloud-container {
+    height: 300px !important;
+  }
+
+  /* Prevent text selection on buttons */
+  .btn,
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Better spacing for mobile forms */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Mobile-optimized response list */
+  .response-list {
+    max-height: 50vh;
+  }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS safe area */
+  .main-content {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  /* Fix for iOS input zoom */
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  /* Smooth scrolling for iOS */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .modal {
+    max-height: 85vh;
+  }
+
+  .response-chart {
+    height: 250px;
+  }
+}
+
+/* Loading states for better UX */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 18px;
+  color: #6b7280;
+}
+
+/* Pull to refresh indicator (visual feedback) */
+@media (max-width: 768px) {
+  body {
+    overscroll-behavior-y: contain;
+  }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate PWA Icons</title>
+</head>
+<body>
+    <h1>Icon Generator</h1>
+    <p>Creating placeholder icons...</p>
+    <canvas id="canvas"></canvas>
+    <script>
+        function generateIcon(size, filename) {
+            const canvas = document.getElementById('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Blue gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1e40af');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // White text
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.3}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('AR', size / 2, size / 2);
+
+            // Download
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        // Generate all required icons
+        setTimeout(() => generateIcon(180, 'apple-touch-icon.png'), 100);
+        setTimeout(() => generateIcon(192, 'icon-192.png'), 200);
+        setTimeout(() => generateIcon(512, 'icon-512.png'), 300);
+
+        // Splash screens
+        const splashSizes = [
+            [1125, 2436, 'splash-1125x2436.png'],
+            [1242, 2688, 'splash-1242x2688.png'],
+            [828, 1792, 'splash-828x1792.png'],
+            [1242, 2208, 'splash-1242x2208.png'],
+            [750, 1334, 'splash-750x1334.png'],
+            [1536, 2048, 'splash-1536x2048.png']
+        ];
+
+        splashSizes.forEach(([width, height, filename], index) => {
+            setTimeout(() => {
+                const canvas = document.getElementById('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+
+                // White background
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, width, height);
+
+                // Centered blue circle
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const radius = Math.min(width, height) * 0.15;
+
+                const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+                gradient.addColorStop(0, '#2563eb');
+                gradient.addColorStop(1, '#1e40af');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // White text
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${radius * 0.8}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('AR', centerX, centerY);
+
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+            }, 400 + (index * 100));
+        });
+
+        setTimeout(() => {
+            document.body.innerHTML += '<p>All icons generated! Check your downloads folder.</p>';
+        }, 2000);
+    </script>
+</body>
+</html>
