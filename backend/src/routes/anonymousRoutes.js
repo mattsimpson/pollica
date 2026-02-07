@@ -6,18 +6,20 @@ const { anonymousAuth } = require('../middleware/auth');
 
 const joinLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: { error: 'Too many authentication attempts. Please try again later.' },
+  max: 5000,
+  message: { error: 'Too many join attempts for this session. Please try again later.' },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  keyGenerator: (req) => req.body.joinCode || req.ip
 });
 
 const codeLookupLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: 5000,
   message: { error: 'Too many session lookup attempts. Please try again later.' },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  keyGenerator: (req) => req.params.code || req.ip
 });
 
 // Public routes (no authentication required)

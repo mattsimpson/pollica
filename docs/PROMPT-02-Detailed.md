@@ -104,11 +104,11 @@ All tables use InnoDB with utf8mb4. Foreign keys cascade on delete, except the s
 
 ## Rate Limiting
 
-Four tiers of rate limiting:
-- **General**: 100 requests per 15 minutes on all routes
-- **Auth**: 10 requests per 15 minutes on login/register endpoints
-- **Anonymous Join**: 10 requests per 15 minutes on the session join endpoint
-- **Code Lookup**: 20 requests per 15 minutes on the session-by-code lookup endpoint
+Four tiers of rate limiting (`trust proxy` enabled for correct client IP behind reverse proxies):
+- **General**: 100 requests per 15 minutes per IP, skipped for authenticated requests and `/api/anonymous/` paths (which have dedicated limiters)
+- **Auth**: 10 requests per 15 minutes per IP on login/register endpoints
+- **Anonymous Join**: 5000 requests per 15 minutes per join code on the session join endpoint
+- **Code Lookup**: 5000 requests per 15 minutes per join code on the session-by-code lookup endpoint
 
 ---
 

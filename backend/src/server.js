@@ -15,6 +15,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const SocketService = require('./services/socketService');
 
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
@@ -54,7 +55,8 @@ const generalLimiter = rateLimit({
   max: 100, // 100 requests per window
   message: { error: 'Too many requests. Please try again later.' },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  skip: (req) => !!(req.headers.authorization || req.headers['x-anonymous-token'] || req.path.startsWith('/api/anonymous/'))
 });
 
 // Stricter rate limiting for auth endpoints

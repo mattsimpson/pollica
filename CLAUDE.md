@@ -261,7 +261,7 @@ All environment variables are configured in a single `.env` file in the project 
 
 The application includes several security measures:
 - **Helmet.js** - Security headers (CSP, HSTS, X-Frame-Options, etc.)
-- **Rate limiting** - 100 req/15min general, 10 req/15min for auth endpoints
+- **Rate limiting** - General limiter (100 req/15min per IP) skipped for authenticated requests; auth endpoints 10 req/15min per IP; anonymous join/lookup keyed by join code; `trust proxy` enabled
 - **JWT validation** - Requires 32+ character secret, app fails without it
 - **Role-based access** - Admin and presenter roles with middleware enforcement
 - **Registration restricted** - Public registration creates presenter accounts only

@@ -213,6 +213,7 @@ Initialize Express + HTTP server + Socket.io:
 
 ```javascript
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
@@ -239,16 +240,16 @@ app.use(helmet({
 }));
 ```
 
-**Rate limiting -- 4 tiers:**
+**Rate limiting -- 4 tiers** (`trust proxy` enabled):
 
-| Name | Applied To | Window | Max |
-|------|-----------|--------|-----|
-| generalLimiter | All routes (`app.use`) | 15 min | 100 |
-| authLimiter | `/api/auth/*` at mount | 15 min | 10 |
-| joinLimiter | `POST /api/anonymous/join` | 15 min | 10 |
-| codeLookupLimiter | `GET /api/anonymous/session/:code` | 15 min | 20 |
+| Name | Applied To | Window | Max | Key |
+|------|-----------|--------|-----|-----|
+| generalLimiter | All routes (`app.use`), skipped for authenticated requests and `/api/anonymous/` paths | 15 min | 100 | IP |
+| authLimiter | `/api/auth/*` at mount | 15 min | 10 | IP |
+| joinLimiter | `POST /api/anonymous/join` | 15 min | 5000 | Join code |
+| codeLookupLimiter | `GET /api/anonymous/session/:code` | 15 min | 5000 | Join code |
 
-All use `standardHeaders: true, legacyHeaders: false`.
+All use `standardHeaders: true, legacyHeaders: false`. The general limiter has `skip: (req) => !!(req.headers.authorization || req.headers['x-anonymous-token'] || req.path.startsWith('/api/anonymous/'))` so authenticated requests and anonymous endpoints (which have dedicated limiters) are not rate-limited by IP.
 
 **Route mounting:**
 ```javascript
@@ -409,8 +410,8 @@ MySQL2 promise-based connection pool:
 - `GET /question/:questionId/stats` -> authenticateToken, requireRole('presenter', 'admin') -> getResponseStats
 
 **Anonymous routes** (`/api/anonymous`, own rate limiters):
-- `GET /session/:code` -> codeLookupLimiter (20/15min) -> getSessionByCode
-- `POST /join` -> joinLimiter (10/15min) -> joinSession
+- `GET /session/:code` -> codeLookupLimiter (5000/15min per code) -> getSessionByCode
+- `POST /join` -> joinLimiter (5000/15min per code) -> joinSession
 - `POST /response` -> anonymousAuth -> submitResponse
 - `GET /my-response/:questionId` -> anonymousAuth -> getMyResponse
 

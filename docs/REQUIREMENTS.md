@@ -197,12 +197,12 @@
 #### Session Discovery (GET /api/anonymous/session/:code)
 - Looks up session by join code (case-insensitive)
 - Returns session info, presenter name, selected question (if any and active), participant count
-- Rate limited to 20 requests per 15 minutes
+- Rate limited to 5000 requests per 15 minutes per join code
 
 #### Joining (POST /api/anonymous/join)
 - Requires joinCode and displayName (max 50 characters, trimmed)
 - Generates 64-character hex anonymous token (crypto.randomBytes(32))
-- Rate limited to 10 requests per 15 minutes
+- Rate limited to 5000 requests per 15 minutes per join code
 - Token stored in sessionStorage keyed by join code
 
 #### Responding (POST /api/anonymous/response)
@@ -291,14 +291,14 @@
 - `crossOriginEmbedderPolicy`: disabled (for QR code rendering)
 
 #### Rate Limiting (4 tiers)
-| Scope | Window | Max Requests | Applied To |
-|-------|--------|-------------|------------|
-| General | 15 min | 100 | All routes |
-| Auth | 15 min | 10 | /api/auth/* |
-| Anonymous Join | 15 min | 10 | POST /api/anonymous/join |
-| Code Lookup | 15 min | 20 | GET /api/anonymous/session/:code |
+| Scope | Window | Max Requests | Key | Applied To |
+|-------|--------|-------------|-----|------------|
+| General | 15 min | 100 | IP | Unauthenticated routes only (skipped when `Authorization` or `X-Anonymous-Token` header present, or for `/api/anonymous/` paths which have dedicated limiters) |
+| Auth | 15 min | 10 | IP | /api/auth/* |
+| Anonymous Join | 15 min | 500 | Join code | POST /api/anonymous/join |
+| Code Lookup | 15 min | 100 | Join code | GET /api/anonymous/session/:code |
 
-All limiters use `standardHeaders: true` and `legacyHeaders: false`.
+All limiters use `standardHeaders: true` and `legacyHeaders: false`. `trust proxy` is enabled so IP-based limiters see real client IPs behind reverse proxies.
 
 #### Access Control
 - Role-based middleware: `requireRole('presenter', 'admin')` on session/question/response management routes
@@ -494,10 +494,10 @@ Index: `idx_question_id(question_id)`
 
 | Method | Path | Auth | Rate Limit | Description |
 |--------|------|------|------------|-------------|
-| GET | /api/anonymous/session/:code | None | 20/15min | Look up session by join code |
-| POST | /api/anonymous/join | None | 10/15min | Join session anonymously |
-| POST | /api/anonymous/response | X-Anonymous-Token | General only | Submit response |
-| GET | /api/anonymous/my-response/:questionId | X-Anonymous-Token | General only | Check if responded |
+| GET | /api/anonymous/session/:code | None | 5000/15min per code | Look up session by join code |
+| POST | /api/anonymous/join | None | 5000/15min per code | Join session anonymously |
+| POST | /api/anonymous/response | X-Anonymous-Token | None (auth required) | Submit response |
+| GET | /api/anonymous/my-response/:questionId | X-Anonymous-Token | None (auth required) | Check if responded |
 
 ### Admin Routes (mounted at /api/admin, all require JWT + admin role)
 
