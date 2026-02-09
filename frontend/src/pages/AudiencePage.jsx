@@ -554,18 +554,18 @@ function AudiencePage() {
           {currentQuestion.question_type === 'true_false' && (
             <div className={`answer-options true-false ${hasResponded ? 'disabled' : ''}`}>
               <button
-                className={`answer-option ${selectedAnswer === 'True' ? 'selected' : ''}`}
-                onClick={() => !hasResponded && setSelectedAnswer('True')}
-                disabled={hasResponded}
-              >
-                True
-              </button>
-              <button
                 className={`answer-option ${selectedAnswer === 'False' ? 'selected' : ''}`}
                 onClick={() => !hasResponded && setSelectedAnswer('False')}
                 disabled={hasResponded}
               >
                 False
+              </button>
+              <button
+                className={`answer-option ${selectedAnswer === 'True' ? 'selected' : ''}`}
+                onClick={() => !hasResponded && setSelectedAnswer('True')}
+                disabled={hasResponded}
+              >
+                True
               </button>
             </div>
           )}
@@ -654,16 +654,16 @@ function AudiencePage() {
               {currentQuestion.question_type === 'true_false' && (
                 <div className="answer-options true-false disabled">
                   <button
-                    className={`answer-option ${selectedAnswer === 'True' ? 'selected' : ''}`}
-                    disabled
-                  >
-                    True
-                  </button>
-                  <button
                     className={`answer-option ${selectedAnswer === 'False' ? 'selected' : ''}`}
                     disabled
                   >
                     False
+                  </button>
+                  <button
+                    className={`answer-option ${selectedAnswer === 'True' ? 'selected' : ''}`}
+                    disabled
+                  >
+                    True
                   </button>
                 </div>
               )}
@@ -735,16 +735,16 @@ function AudiencePage() {
           {currentQuestion.question_type === 'true_false' && (
             <div className="answer-options true-false">
               <button
-                className={`answer-option ${selectedAnswer === 'True' ? 'selected' : ''}`}
-                onClick={() => setSelectedAnswer('True')}
-              >
-                True
-              </button>
-              <button
                 className={`answer-option ${selectedAnswer === 'False' ? 'selected' : ''}`}
                 onClick={() => setSelectedAnswer('False')}
               >
                 False
+              </button>
+              <button
+                className={`answer-option ${selectedAnswer === 'True' ? 'selected' : ''}`}
+                onClick={() => setSelectedAnswer('True')}
+              >
+                True
               </button>
             </div>
           )}
