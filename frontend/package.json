@@ -23,7 +23,7 @@
     "@visx/text": "^3.3.0",
     "@visx/wordcloud": "^3.3.0",
     "axios": "^1.7.9",
-    "lucide-react": "^0.563.0",
+    "lucide-react": "^0.575.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
