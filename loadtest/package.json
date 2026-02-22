@@ -1,0 +1,17 @@
+{
+  "name": "pollica-loadtest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Load testing tool for Pollica audience simulation",
+  "main": "index.js",
+  "bin": {
+    "loadtest": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "socket.io-client": "^4.8.1"
+  }
+}
